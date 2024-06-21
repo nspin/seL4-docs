@@ -3,5 +3,5 @@
 
 name: rust
 display_name: Rust
-description: seL4 Rust support
+description: Support for the Rust programming language in seL4 userspace
 project_order: 11
