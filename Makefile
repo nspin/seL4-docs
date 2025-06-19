@@ -226,6 +226,13 @@ DOCKER_IMG:=docs_builder
 docker_serve: docker_build
 	docker run -p 4000:4000 -v $(PWD):/docs -w /docs -it $(DOCKER_IMG) bash -c 'make serve JEKYLL_ENV=$(JEKYLL_ENV)'
 
+.PHONY: docker_run
+docker_run: docker_build
+	docker run -p 4000:4000 \
+		-v $(PWD):/docs -w /docs \
+		-v $(PWD)/../seL4-rust-tutorial:/tut \
+		-it $(DOCKER_IMG) bash -c 'JEKYLL_ENV=$(JEKYLL_ENV) bash'
+
 .PHONY: docker_build
 docker_build:
 	docker build -t $(DOCKER_IMG) tools/
@@ -234,7 +241,7 @@ docker_build:
 # the connection; also works locally
 .PHONY: serve
 serve: generate
-	JEKYLL_ENV=$(JEKYLL_ENV) bundle exec jekyll serve
+	JEKYLL_ENV=$(JEKYLL_ENV) bundle exec jekyll serve --host 0.0.0.0
 
 .PHONY: generate
 generate: repos ruby_deps .npm_deps generate_api microkit-tutorial rust-tutorial tutorials

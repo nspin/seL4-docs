@@ -1,7 +1,7 @@
 # Copyright 2020 Data61, CSIRO
 # SPDX-License-Identifier: BSD-2-Clause
 
-FROM ruby:2
+FROM ruby:3.3
 
 RUN apt-get update -q \
     && apt-get install -y --no-install-recommends \
@@ -15,15 +15,17 @@ RUN apt-get update -q \
         python3-pip \
         python3-pyelftools \
         rsync \
+        npm \
     && apt-get clean autoclean \
     && apt-get autoremove --yes \
-    && pip3 install setuptools camkes-deps \
+    && pip3 install --break-system-packages setuptools camkes-deps \
     && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 # Init bundle dependencies
-RUN git clone https://github.com/seL4/docs.git \
+RUN git clone https://github.com/lsf37/docs.git -b new-design \
     && cd docs \
     && bundle install \
+    && npm install \
     && cd / \
     && rm -rf docs
 
