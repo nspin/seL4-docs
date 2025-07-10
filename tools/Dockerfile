@@ -15,6 +15,7 @@ RUN apt-get update -q \
         python3-pip \
         python3-pyelftools \
         npm \
+        rsync \
     && apt-get clean autoclean \
     && apt-get autoremove --yes \
     && pip3 install --break-system-packages setuptools camkes-deps \
@@ -36,10 +37,13 @@ ENV PATH=/root/.cargo/bin:$PATH
 RUN cargo install mdbook@0.4.36
 
 RUN mkdir -p /opt/microkit/sdk \
-    && curl -L https://github.com/seL4/microkit/releases/download/1.4.1/microkit-sdk-1.4.1-linux-x86-64.tar.gz \
+    && curl -L https://github.com/seL4/microkit/releases/download/2.0.1/microkit-sdk-2.0.1-linux-x86-64.tar.gz \
         | tar -xzf - -C /opt/microkit/sdk --strip-components=1
 
 RUN mkdir -p /opt/seL4 && ln -s /opt/microkit/sdk/board/qemu_virt_aarch64/debug/ /opt/seL4/libsel4
+
+ENV SEL4_INSTALL_DIR=/opt/seL4
+ENV MICROKIT_SDK=/opt/microkit/sdk
 
 RUN git config --global --add safe.directory '*'
 
